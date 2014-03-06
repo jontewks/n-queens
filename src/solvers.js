@@ -56,8 +56,66 @@ window.findNRooksSolution = function(n) {
 
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
 window.countNRooksSolutions = function(n) {
-  var solutionCount = undefined; //fixme
+  var board = new Board({n:n});
+  var rows = board.rows();
+  var startRow = 0;
+  var startCol = 0;
+  var matrix = [];
+  var solution = {};
+  var tempMatrix = [];
 
+  // outermost loop, values incrementing:
+  // startRow (and startCol, if startRow > n)
+  for (var i = 0; i < (n * n); i++) {
+    // console.log('row:', startRow);
+    // console.log('col:', startCol);
+    // console.log('-----------');
+    board.togglePiece(startRow, startCol);
+
+    // middle loop, values incrementing:
+    // j (the row that we are currently toggling new pieces on)
+    for (var j = 0; j < n; j++) {
+
+      // inner loop, value inc:
+      // k (the column we are toggling on)
+      for (var k = 0; k < n; k++) {
+        if (rows[j][k] === 0) {
+          board.togglePiece(j, k);
+          if (board.hasAnyRooksConflicts()) {
+            console.log('conflicts');
+            board.togglePiece(j, k);
+          }
+        }
+      }
+      // end inner
+    }
+    // end middle
+    // end of each individual solution board
+
+    for (var l = 0; l < n; l++) {
+      matrix.push(board.attributes[l]);
+    }
+
+    tempMatrix = matrix.slice();
+
+    if (_.reduce(_.flatten(tempMatrix), function(memo, num){ return memo + num; }) === n) {
+      var key = JSON.stringify(matrix);
+      console.log('erwer');
+      console.log(matrix);
+      solution[key] = true;
+    }
+
+    board = new Board({n:n});
+    matrix = [];
+
+    if (++startRow === n) {
+      startRow = 0;
+      startCol++;
+    }
+  }
+  // end outer
+
+  var solutionCount = Object.keys(solution).length;
   console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
   return solutionCount;
 };
