@@ -56,28 +56,59 @@ window.findNRooksSolution = function(n) {
 
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
 window.countNRooksSolutions = function(n) {
-  var matrix = makeEmptyMatrix(n);
+  if (n === 0 || n === 1) { return 1; }
+  var board = new Board({n:n});
   var solutionCount = 0;
 
-  // empty board has been generated
-  var placeRooks = function(matrixPrevious, currentRow) {
-    // base case -- save the board
+  var giveRooks = function(boardPrevious, currentRow) {
     if (currentRow >= n) {
-      // write the board to our solution object
-      var checkBoard = new Board(JSON.parse(JSON.stringify(matrix)));
-      if (!checkBoard.hasAnyRooksConflicts()) { solutionCount++; }
+      solutionCount++;
     } else {
-      // iterates thru current row, toggles piece in spot currentCol, invokes the recursive, then untoggles the piece
       for (var currentCol = 0; currentCol < n; currentCol++) {
-        matrixPrevious[currentRow][currentCol] = 1;
-        placeRooks(matrixPrevious, currentRow + 1);
-        matrixPrevious[currentRow][currentCol] = 0;
+        boardPrevious.attributes[currentRow][currentCol] = 1;
+        if (boardPrevious.hasAnyRooksConflicts()) {
+          boardPrevious.attributes[currentRow][currentCol] = 0;
+          continue;
+        }
+        giveRooks(boardPrevious, currentRow + 1);
+        boardPrevious.attributes[currentRow][currentCol] = 0;
       }
     }
   };
 
-  placeRooks(matrix, 0);
+  giveRooks(board, 0);
   return solutionCount;
+
+
+
+
+
+
+
+
+
+
+
+
+  // // empty board has been generated
+  // var placeRooks = function(matrixPrevious, currentRow) {
+  //   // base case -- save the board
+  //   if (currentRow >= n) {
+  //     // write the board to our solution object
+  //     var checkBoard = new Board(JSON.parse(JSON.stringify(matrix)));
+  //     if (!checkBoard.hasAnyRooksConflicts()) { solutionCount++; }
+  //   } else {
+  //     // iterates thru current row, toggles piece in spot currentCol, invokes the recursive, then untoggles the piece
+  //     for (var currentCol = 0; currentCol < n; currentCol++) {
+  //       matrixPrevious[currentRow][currentCol] = 1;
+  //       placeRooks(matrixPrevious, currentRow + 1);
+  //       matrixPrevious[currentRow][currentCol] = 0;
+  //     }
+  //   }
+  // };
+
+  // placeRooks(matrix, 0);
+  // return solutionCount;
 };
 
 
@@ -119,31 +150,54 @@ window.findNQueensSolution = function(n) {
 
 // return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
 window.countNQueensSolutions = function(n) {
-  if (n === 0) { return 1; }
-  var matrix = makeEmptyMatrix(n);
+  if (n === 0 || n === 1) { return 1; }
+  var board = new Board({n:n});
   var solutionCount = 0;
 
-  // empty board has been generated
-  var placeQueens = function(matrixPrevious, currentRow) {
-    // base case -- save the board
+  var giveQueens = function(boardPrevious, currentRow) {
     if (currentRow >= n) {
-      // write the board to our solution object
-      var checkBoard = new Board(JSON.parse(JSON.stringify(matrix)));
-      if (!checkBoard.hasAnyQueensConflicts()) {
-        solutionCount++;
-      }
+      solutionCount++;
     } else {
-      // iterates thru current row, toggles piece in spot currentCol, invokes the recursive, then untoggles the piece
       for (var currentCol = 0; currentCol < n; currentCol++) {
-        matrixPrevious[currentRow][currentCol] = 1;
-        placeQueens(matrixPrevious, currentRow + 1);
-        matrixPrevious[currentRow][currentCol] = 0;
+        boardPrevious.attributes[currentRow][currentCol] = 1;
+        if (boardPrevious.hasAnyQueensConflicts()) {
+          boardPrevious.attributes[currentRow][currentCol] = 0;
+          continue;
+        }
+        giveQueens(boardPrevious, currentRow + 1);
+        boardPrevious.attributes[currentRow][currentCol] = 0;
       }
     }
   };
 
-  placeQueens(matrix, 0);
+  giveQueens(board, 0);
   return solutionCount;
+
+  // if (n === 0) { return 1; }
+  // var matrix = makeEmptyMatrix(n);
+  // var solutionCount = 0;
+
+  // // empty board has been generated
+  // var placeQueens = function(matrixPrevious, currentRow) {
+  //   // base case -- save the board
+  //   if (currentRow >= n) {
+  //     // write the board to our solution object
+  //     var checkBoard = new Board(JSON.parse(JSON.stringify(matrix)));
+  //     if (!checkBoard.hasAnyQueensConflicts()) {
+  //       solutionCount++;
+  //     }
+  //   } else {
+  //     // iterates thru current row, toggles piece in spot currentCol, invokes the recursive, then untoggles the piece
+  //     for (var currentCol = 0; currentCol < n; currentCol++) {
+  //       matrixPrevious[currentRow][currentCol] = 1;
+  //       placeQueens(matrixPrevious, currentRow + 1);
+  //       matrixPrevious[currentRow][currentCol] = 0;
+  //     }
+  //   }
+  // };
+
+  // placeQueens(matrix, 0);
+  // return solutionCount;
 };
 
 
